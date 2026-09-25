@@ -158,7 +158,7 @@ The dashboard focuses on the key target of keeping **claims over 100 days below 
 
 **Claim Type Analysis:** Understand how claims are distributed across different claim types.
 
-<img width="1493" height="839" alt="insurance page 1" src="https://github.com/user-attachments/assets/2e22358e-f28d-4377-95e1-2cb0297f6d9b" />
+<img width="1481" height="831" alt="Insurance claims page 1 v2" src="https://github.com/user-attachments/assets/b04fb664-a8de-4b49-ab56-059910af4897" />
 
 
 ---

@@ -1,44 +1,81 @@
-# 🏥 Insurance Claims Performance Dashboard
+# 🏥 Insurance Claims Performance Project
 
 ## Project Overview
 
-This project simulates a real-world insurance claims environment for **Insurix**, a fictional insurance company. Following concerns from the National Consumer Protection Association (NCPA) regarding delayed claim processing, the business required a reporting solution to improve visibility into claims operations and monitor key performance indicators (KPIs).
+This project simulates a real-world insurance claims environment for **Insurix**, a fictional insurance company.
 
-Using **SQL Server** and **Power BI**, I designed and developed an interactive dashboard that enables stakeholders to monitor claim processing, track agent productivity, identify bottlenecks, and improve operational decision-making. :contentReference[oaicite:0]{index=0}
+Following concerns from the National Consumer Protection Association (NCPA) regarding delayed claim processing, the business required greater visibility into claims operations and the ability to monitor claims approaching or exceeding key service targets.
+
+To address this challenge, I designed and developed an interactive **Power BI dashboard using SQL Server as the data source**.
+
+The solution provides a centralised view of claims performance, allowing managers to monitor claims aging, track open and closed claims, assess agent productivity, identify processing bottlenecks, and make data-driven decisions.
+
+
+
+<img width="1536" height="1024" alt="Insurance thumbnail" src="https://github.com/user-attachments/assets/e5245745-05b0-4dbf-b0d2-1640e9173ac7" />
+
 
 ---
 
-# Business Problem
+# 🏥 Business Problem
 
-Insurix lacked a centralized reporting solution for monitoring insurance claims.
+Insurix lacked a centralised reporting solution for monitoring insurance claims performance.
 
 This made it difficult to:
 
-- Monitor claims over 100 days old
+- Monitor claims exceeding 100 days
 - Track monthly claims created and closed
+- Identify aging claims requiring attention
 - Measure agent productivity
 - Identify processing bottlenecks
-- Monitor claim types and workload distribution
-- Meet regulatory service targets
+- Monitor workload across different claim types
+- Support regulatory and service-level reporting
 
 ---
 
-# Solution
+# 🏥 Business Requirements & KPI Targets
 
-Using **SQL Server** and **Power BI**, I built an end-to-end reporting solution that:
+The dashboard was designed around an important claims processing target:
 
-- Cleans and transforms insurance claims data
-- Calculates claim age and due dates
-- Categorizes claims into aging buckets
+- **Claims over 100 days: Below 15**
+
+This KPI allows managers to quickly identify whether claims are being processed within expected timeframes and highlights areas where additional attention may be required.
+
+The reporting solution also needed to provide visibility into:
+
+- Claims created and closed each month
+- Open claims by age
+- Claim processing trends
+- Agent productivity
+- Claim type distribution
+- Claims approaching the 100-day threshold
+
+---
+
+# 🏥 Solution
+
+Using **SQL Server and Power BI**, I developed an end-to-end reporting solution that:
+
+- Cleans and transforms raw insurance claims data
+- Converts claim status codes into readable business values
+- Calculates the age of each claim
+- Categorises claims into aging buckets
+- Calculates days remaining before the 100-day target
 - Tracks open and closed claims
-- Monitors KPI performance
-- Provides interactive dashboards for managers and executives
+- Monitors claims exceeding the 100-day threshold
+- Measures agent productivity
+- Provides interactive dashboards for managers and operational teams
+
+
+
+<img width="1536" height="1024" alt="Insurance Project Solution" src="https://github.com/user-attachments/assets/a131e917-fde0-4000-ac41-e74bbc0cfe49" />
+
 
 ---
 
-# Tech Stack
+# 🏥 Tech Stack
 
-- SQL Server
+- SQL
 - Microsoft SQL Server Management Studio (SSMS)
 - Power BI
 - DAX
@@ -46,57 +83,164 @@ Using **SQL Server** and **Power BI**, I built an end-to-end reporting solution 
 
 ---
 
-# Database Schema
+# 🏥 Database & Data Model
 
 The project uses two core business tables:
 
-- **claim**
-- **account**
+### claim
 
-These tables are transformed into a reporting dataset using SQL before being loaded into Power BI.
+Contains claim-level information including claim ID, account number, claim status, creation date, action date, claim owner, and claim type.
 
-*(Insert database schema image here.)*
+### account
 
----
+Contains customer account information associated with each insurance claim.
 
-# SQL Highlights
+The data is transformed using SQL to create a clean reporting dataset before being loaded into Power BI.
 
-This project demonstrates:
+Within Power BI, additional reference tables are used to support reporting across claim dates, agents, and claim types.
 
-- CASE statements
-- DATEDIFF calculations
-- Date logic
-- Data transformation
-- Reporting datasets
-- KPI calculations
-
-The SQL solution:
-
-- Converts claim status codes into readable values
-- Calculates claim age
-- Creates claim age categories
-- Calculates days until the 100-day service target
-- Produces a clean reporting dataset for Power BI
-
-*(Insert SQL image here.)*
+*(Insert database/data model image here.)*
 
 ---
 
-# Power BI Dashboard
+# 🏥 Key Challenge & Solution
 
-The dashboard contains five report pages:
+One of the key challenges was accurately reporting both **claims created** and **claims closed** while allowing users to analyse the data using consistent report filters.
 
-- Claims Overview
-- Agent Claims Performance
-- Open Claims Management
-- Closed Claims Performance
-- Raw Data
+Claims are created on one date but may be closed on a completely different date. This means the dashboard needs to analyse multiple date relationships depending on the metric being calculated.
 
-*(Insert dashboard screenshots here.)*
+To solve this, I:
+
+- Created dedicated reporting tables for different claim metrics
+- Used a central Date table
+- Created reference tables for Agent and Claim Type
+- Connected the reporting tables using a star schema
+- Built DAX measures to calculate claims using the appropriate date relationships
+
+This allows users to analyse both created and closed claims accurately while maintaining consistent filtering across the dashboard.
+
+*(Insert Power BI data model image here.)*
 
 ---
 
-# Key Features
+# 🏥 SQL Transformation
+
+SQL was used to transform the raw claims data into a reporting-ready dataset before loading it into Power BI.
+
+The transformation includes:
+
+- Converting claim status codes into readable values
+- Calculating claim age using `DATEDIFF`
+- Creating claim aging categories
+- Calculating days remaining until the 100-day threshold
+- Preparing claim status and date fields for reporting
+- Creating a clean dataset for Power BI
+
+*(Insert SQL script or screenshot here.)*
+
+---
+
+# 🏥 Power BI Dashboard
+
+The Power BI solution contains five report pages:
+
+## Claims Overview
+
+This page provides managers with a high-level view of overall claims performance.
+
+The dashboard focuses on the key target of keeping **claims over 100 days below 15**, while also providing visibility into claims created, claims closed, claim types, and monthly performance trends.
+
+**KPI Monitoring:** Quickly identify whether the business is meeting the target for claims over 100 days.
+
+**Claims Volume:** Monitor the number of claims created and closed.
+
+**Trend Analysis:** Track claims performance over time and identify changes in workload.
+
+**Claim Type Analysis:** Understand how claims are distributed across different claim types.
+
+<img width="1493" height="839" alt="insurance page 1" src="https://github.com/user-attachments/assets/2e22358e-f28d-4377-95e1-2cb0297f6d9b" />
+
+
+---
+
+## Agent Claims Performance
+
+This page provides managers with detailed visibility into individual agent performance.
+
+It allows users to compare the number and types of claims being handled by each agent and identify differences in productivity across the team.
+
+**Agent Performance:** Compare claim volumes across individual agents.
+
+**Productivity Monitoring:** Identify agents closing higher or lower volumes of claims.
+
+**Workload Analysis:** Understand the types of claims being managed by each agent.
+
+**Performance Support:** Identify areas where additional support or workload balancing may be required.
+
+<img width="1489" height="841" alt="Insurance page 2" src="https://github.com/user-attachments/assets/b96a613e-5757-4555-aa28-c8f8b0dd609b" />
+
+
+---
+
+## Open Claims Management
+
+This page focuses specifically on claims that are still open and require ongoing management.
+
+Claims are grouped into aging categories, allowing managers to quickly identify older claims and prioritise cases approaching or exceeding the 100-day threshold.
+
+**Claims Aging:** Group open claims into age categories.
+
+**Overdue Claims:** Quickly identify claims exceeding 100 days.
+
+**Claims Prioritisation:** Highlight claims requiring immediate attention.
+
+**Owner Visibility:** Identify the agent responsible for each open claim.
+
+<img width="1490" height="842" alt="insurance page 3" src="https://github.com/user-attachments/assets/277ec3fb-797f-4668-ab96-1d41d614cf43" />
+
+---
+
+## Closed Claims Performance
+
+This page provides visibility into completed claims and closure trends over time.
+
+Managers can monitor monthly closure volumes, compare performance with previous periods, and analyse closed claims by claim type and processing age.
+
+**Closure Trends:** Monitor the number of claims closed over time.
+
+**Month-on-Month Analysis:** Compare closure performance against the previous month.
+
+**Claim Type Analysis:** Understand which types of claims are being completed.
+
+**Processing Time:** Analyse how long claims took to reach completion.
+
+<img width="1491" height="840" alt="Insurance page 4" src="https://github.com/user-attachments/assets/0b3713ca-3ad9-4e97-a19d-8e7004eea5a0" />
+
+---
+
+## Raw Data
+
+This page provides access to the underlying reporting data used throughout the dashboard.
+
+It allows users to review individual claim records and investigate specific cases when more detailed analysis is required.
+
+**Detailed Claims:** Review individual claim records.
+
+**Data Validation:** Support investigation and validation of dashboard results.
+
+**Operational Analysis:** Drill into specific claims requiring further investigation.
+
+<img width="1491" height="839" alt="Insurance page 5" src="https://github.com/user-attachments/assets/ac0b9e14-24d3-46eb-b51e-1acbcaf80669" />
+
+---
+
+Each page is designed for a different level of analysis, allowing users to move from high-level claims performance down to individual claims and agent-level results.
+
+---
+
+# 🏥 Key Features
+
+The dashboard includes:
 
 - KPI scorecards
 - Claims aging analysis
@@ -105,44 +249,50 @@ The dashboard contains five report pages:
 - Agent productivity analysis
 - Claim type analysis
 - Month-on-month trend reporting
-- Interactive slicers
-- Drill-through reporting
+- Interactive slicers and filters
+- Target-based KPI indicators
+- Detailed claim-level reporting
 
 ---
 
-# Technical Challenges
+# 🏥 How the Dashboard Supports Decisions
 
-## Managing Multiple Date Relationships
+The dashboard helps managers quickly understand what is happening across insurance claims operations.
 
-One of the biggest challenges was accurately reporting both **claims created** and **claims closed** while allowing both metrics to respond to the same report filters.
+Managers can now:
 
-To solve this, I:
-
-- Created duplicate reporting tables
-- Used a reference Date table
-- Built reference tables for Agent and Claim Type
-- Connected all tables through a star schema
-
-This ensured filters worked correctly across both creation and closure reporting.
-
----
-
-# Project Outcomes
-
-The dashboard provides Insurix with a centralized view of claims operations, replacing manual reporting with interactive dashboards.
-
-Business users can now:
-
-- Monitor claims over 100 days old
-- Track monthly claims created and closed
+- Identify claims approaching or exceeding 100 days
+- Prioritise older claims requiring attention
+- Monitor monthly claims created and closed
+- Compare agent productivity
 - Identify processing bottlenecks
-- Compare agent performance
-- Prioritize overdue claims
-- Support faster, data-driven decision-making
+- Monitor workload across different claim types
+- Track claims performance over time
+- Support workload and resource planning
 
 ---
 
-# Files Included
+# 🏥 Business Impact & Benefits
+
+The solution provides Insurix with a centralised and interactive view of claims operations.
+
+This solution allows the business to:
+
+- Monitor important claims KPIs in one place
+- Identify aging and overdue claims earlier
+- Track monthly claims volumes and closure trends
+- Compare agent productivity
+- Prioritise claims requiring immediate attention
+- Improve visibility into claims processing
+- Support regulatory and service-level monitoring
+- Reduce reliance on manual reporting
+- Support faster, data-driven decisions
+
+*(Insert Project Outcome image here.)*
+
+---
+
+# 🏥 Files Included
 
 ```text
 📂 SQL Scripts
@@ -161,15 +311,19 @@ Business users can now:
 
 ---
 
-# Skills Demonstrated
+# 🏥 Skills Demonstrated
 
 - SQL
 - Data Modelling
+- Data Transformation
 - ETL
 - Power BI
 - DAX
-- Data Visualization
+- Power Query
 - KPI Reporting
-- Business Analysis
 - Dashboard Design
+- Business Analysis
+- Data Visualisation
 - Claims Analytics
+- Business Requirements
+- Problem Solving

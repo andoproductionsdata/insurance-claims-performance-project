@@ -253,10 +253,6 @@ It allows users to review individual claim records and investigate specific case
 
 ---
 
-Each page is designed for a different level of analysis, allowing users to move from high-level claims performance down to individual claims and agent-level results.
-
----
-
 # 🏥 Key Features
 
 The dashboard includes:
@@ -307,7 +303,8 @@ This solution allows the business to:
 - Reduce reliance on manual reporting
 - Support faster, data-driven decisions
 
-*(Insert Project Outcome image here.)*
+<img width="1536" height="1024" alt="Business Outcome" src="https://github.com/user-attachments/assets/6869691d-914a-423c-8fc3-78db65fb0a88" />
+
 
 ---
 

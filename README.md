@@ -83,46 +83,6 @@ Using **SQL Server and Power BI**, I developed an end-to-end reporting solution 
 
 ---
 
-# 🏥 Database & Data Model
-
-The project uses two core business tables:
-
-### claim
-
-Contains claim-level information including claim ID, account number, claim status, creation date, action date, claim owner, and claim type.
-
-### account
-
-Contains customer account information associated with each insurance claim.
-
-The data is transformed using SQL to create a clean reporting dataset before being loaded into Power BI.
-
-Within Power BI, additional reference tables are used to support reporting across claim dates, agents, and claim types.
-
-*(Insert database/data model image here.)*
-
----
-
-# 🏥 Key Challenge & Solution
-
-One of the key challenges was accurately reporting both **claims created** and **claims closed** while allowing users to analyse the data using consistent report filters.
-
-Claims are created on one date but may be closed on a completely different date. This means the dashboard needs to analyse multiple date relationships depending on the metric being calculated.
-
-To solve this, I:
-
-- Created dedicated reporting tables for different claim metrics
-- Used a central Date table
-- Created reference tables for Agent and Claim Type
-- Connected the reporting tables using a star schema
-- Built DAX measures to calculate claims using the appropriate date relationships
-
-This allows users to analyse both created and closed claims accurately while maintaining consistent filtering across the dashboard.
-
-*(Insert Power BI data model image here.)*
-
----
-
 # 🏥 SQL Transformation
 
 SQL was used to transform the raw claims data into a reporting-ready dataset before loading it into Power BI.
@@ -136,7 +96,66 @@ The transformation includes:
 - Preparing claim status and date fields for reporting
 - Creating a clean dataset for Power BI
 
-*(Insert SQL script or screenshot here.)*
+DECLARE @report_date DATE = '2025-01-01';
+
+
+```sql
+SELECT 
+claim_id,
+account_number,
+claim_status,
+date, -- created date
+partition_date, -- action date
+owner,
+claim_type,
+CASE WHEN claim_status = 'A' THEN 'Approved'
+     WHEN claim_status = 'O' THEN 'Open'
+	 WHEN claim_status = 'C' THEN 'Cancelled'
+	 WHEN claim_status = 'D' THEN 'Declined'
+	 END AS claim_status_true,
+	 DATEDIFF(DAY, date, @report_date) as claim_age,
+CASE WHEN DATEDIFF(DAY, date, @report_date) < 30 THEN 'a. 1 - 29 Days'
+     WHEN DATEDIFF(DAY, date, @report_date) BETWEEN 30 AND 70 THEN 'b. 30 - 70 Days'
+	 WHEN DATEDIFF(DAY, date, @report_date) BETWEEN 71 AND 100 THEN 'c. 71 - 100 Days'
+	 WHEN DATEDIFF(DAY, date, @report_date) > 100 THEN 'd. 100 Days +'
+	 END AS age_category,
+CASE WHEN DATEDIFF(DAY, date, partition_date) < 30 THEN 'a. 1 - 29 Days'
+     WHEN DATEDIFF(DAY, date, partition_date) BETWEEN 30 AND 70 THEN 'b. 30 - 70 Days'
+	 WHEN DATEDIFF(DAY, date, partition_date) BETWEEN 71 AND 100 THEN 'c. 71 - 100 Days'
+	 WHEN DATEDIFF(DAY, date, partition_date) > 100 THEN 'd. 100 Days +'
+	 END AS completed_age_category,
+	 DATEDIFF(DAY,@report_date, DATEADD(DAY, 100, date)) as days_until_due_date
+FROM claim
+```
+
+---
+
+# 🏥 Key Challenge & Solution
+
+One of the key challenges was accurately reporting both **claims created** and **claims closed** while allowing users to analyse the data using consistent report filters.
+
+Claims are created on one date but may be closed on a completely different date. This means the dashboard needs to analyse multiple date relationships depending on the metric being calculated.
+
+To solve this, I:
+
+- Created dedicated reporting tables for different claim metrics
+- Used a central Date table
+- The partition date was used to identify when a claim was closed and the date field to identify when the claim was created.
+
+<img width="1794" height="877" alt="Schema tables dates" src="https://github.com/user-attachments/assets/33b93909-79e6-45b8-83d5-f26d82b8dd69" />
+
+
+- Created reference tables for Agent and Claim Type
+- Connected the reporting tables using a star schema
+- Built DAX measures to calculate claims using the appropriate date relationships
+
+<img width="1620" height="786" alt="Ref Tables 2 JPG" src="https://github.com/user-attachments/assets/f37a9e8f-dcfc-4fc7-b728-0bbbf421b7e4" />
+
+
+This allows users to analyse both created and closed claims accurately while maintaining consistent filtering across the dashboard.
+
+<img width="1672" height="941" alt="Insurance Challenge and Solution" src="https://github.com/user-attachments/assets/03b66ea6-8a9f-46eb-8902-f3be279abcf0" />
+
 
 ---
 
